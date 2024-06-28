@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocomplete</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1>Autocomplete Search</h1>
+    <input type="text" id="search" placeholder="Enter a location" autocomplete="off">
+    <ul id="suggestions"></ul>
+
+    <script>
+        document.getElementById('search').addEventListener('input', function() {
+            const query = this.value;
+
+            if (query.length < 1) {
+                document.getElementById('suggestions').innerHTML = '';
+                return;
+            }
+
+            fetch(`autocomplete.php?input=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const suggestions = data.data.map(item => `<li>${item.description}</li>`).join('');
+                    document.getElementById('suggestions').innerHTML = suggestions;
+                })
+                .catch(error => console.error('Error fetching autocomplete suggestions:', error));
+        });
+    </script>
+</body>
+</html>
